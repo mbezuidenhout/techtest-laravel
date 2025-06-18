@@ -1,0 +1,4 @@
+*.log
+.DS_Store
+/db
+/etc/nginx/ssl/localhost*
