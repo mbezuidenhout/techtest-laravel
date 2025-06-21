@@ -1,11 +1,13 @@
-name: Run Code Styling Test
+name: Static Code Analysis
+
+run-name: ${{ github.actor }} run SCA
 
 on:
   push:
     branches: [ develop ]
 
 jobs:
-  laravel-tests:
+  sca-tests:
     runs-on: ubuntu-latest
 
     defaults:
@@ -25,5 +27,11 @@ jobs:
 
       - name: Run pint code styling test
         run: ./vendor/bin/pint --test
+
+      - name: Install NPM dependencies
+        run: npm ci
+
+      - name: Run npm audit
+        run: npm audit
 
 

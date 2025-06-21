@@ -9,9 +9,15 @@ cd app
   exit 1
 }
 
-# Run tests
+# Run php static code analysis
 php artisan test || {
   echo "Unit tests failed. Fix before committing." >&2
+  exit 1
+}
+
+# Run npm audit
+npm audit --include dev --include prod || {
+  echo "Found vulnerabilities in packages." >&2
   exit 1
 }
 

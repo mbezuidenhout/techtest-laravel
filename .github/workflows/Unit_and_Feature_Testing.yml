@@ -1,4 +1,6 @@
-name: Run Laravel Tests
+name: Unit and Feature tests
+
+run-name: ${{ github.actor }} build and run the unit and feature tests
 
 on:
   push:
