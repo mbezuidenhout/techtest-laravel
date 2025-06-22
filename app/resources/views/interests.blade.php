@@ -10,7 +10,7 @@
             <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg">
                 <div class="p-6 text-gray-900 dark:text-gray-100">
                     <div
-                        x-data="tagInputComponent()"
+                        x-data="tagInputComponent(@js($interests), '{{ route('interests.sync', [], false) }}', '{{ csrf_token() }}')"
                         x-init="sortTags()"
                         class="border p-4 rounded"
                     >
@@ -40,50 +40,11 @@
                             <input type="hidden" name="interests[]" :value="tag">
                         </template>
                     </div>
-
-                    <script>
-                        function tagInputComponent() {
-                            return {
-                                input: '',
-                                tags: @json($interests),
-                                addTag() {
-                                    let tag = this.input.trim();
-                                    if (tag && !this.tags.includes(tag)) {
-                                        this.tags.push(tag);
-                                        this.sortTags();
-                                        this.syncInterests();
-                                    }
-                                    this.input = '';
-                                },
-                                removeTag(index) {
-                                    this.tags.splice(index, 1);
-                                    this.syncInterests();
-                                },
-                                sortTags() {
-                                    this.tags.sort((a, b) => a.localeCompare(b));
-                                },
-                                syncInterests() {
-                                    fetch('{{ route('interests.sync') }}', {
-                                        method: 'POST',
-                                        headers: {
-                                            'Content-Type': 'application/json',
-                                            'X-CSRF-TOKEN': '{{ csrf_token() }}'
-                                        },
-                                        body: JSON.stringify({ interests: this.tags })
-                                    })
-                                        .then(response => response.json())
-                                        .then(data => {
-                                            console.log('Interests synced:', data);
-                                        })
-                                        .catch(error => {
-                                            console.error('Error syncing interests:', error);
-                                        });
-                                }
-                            }
-                        }
-                    </script>
                 </div>
             </div>
         </div>
     </div>
+    @push('scripts')
+        @vite(['resources/js/interests.js'])
+    @endpush
 </x-app-layout>

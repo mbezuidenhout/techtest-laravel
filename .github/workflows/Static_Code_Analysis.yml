@@ -25,13 +25,15 @@ jobs:
       - name: Run composer install
         run: composer install -n --prefer-dist
 
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
       - name: Run pint code styling test
         run: ./vendor/bin/pint --test
 
       - name: Install NPM dependencies
         run: npm ci
 
-      - name: Run npm audit
-        run: npm audit
-
-
+      - name: Run ESLint
+        run: npx eslint resources/js

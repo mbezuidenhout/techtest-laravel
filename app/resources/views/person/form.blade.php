@@ -85,7 +85,11 @@
                         </select>
                     </div>
 
-                    <div x-data="tagInputComponent()" class="w-full">
+                    <div
+                        x-data="tagInputComponent(@js($interests), @js(old('interests', $person->interests ?? [] )))"
+                        x-init="sortTags()"
+                        class="w-full"
+                    >
                         <div class="flex flex-wrap gap-2 mb-2" style="flex-wrap: wrap">
                             <template x-for="(tag, index) in tags" :key="index">
                                 <div class="bg-blue-200 dark:bg-gray-900 text-blue-800 dark:text-gray-200 px-2 py-1 rounded flex items-center">
@@ -131,33 +135,4 @@
     @push('scripts')
         @vite(['resources/js/person/form.js'])
     @endpush
-    <script>
-        function tagInputComponent() {
-            return {
-                tags: @json(old('interests', $person->interests ?? [] )),
-                input: '',
-                suggestions: @json($interests),
-                filteredSuggestions: [],
-
-                addTag() {
-                    if (this.input.trim() && !this.tags.includes(this.input.trim())) {
-                        this.tags.push(this.input.trim());
-                    }
-                    this.input = '';
-                    this.filteredSuggestions = [];
-                },
-                removeTag(index) {
-                    this.tags.splice(index, 1);
-                },
-                filterSuggestions() {
-                    const search = this.input.toLowerCase();
-                    this.filteredSuggestions = this.suggestions.filter(s => s.toLowerCase().includes(search) && !this.tags.includes(s));
-                },
-                selectSuggestion(suggestion) {
-                    this.input = suggestion;
-                    this.addTag();
-                }
-            };
-        }
-    </script>
 </x-app-layout>

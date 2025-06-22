@@ -37,3 +37,38 @@ window.personForm = function () {
         }
     };
 };
+
+window.tagInputComponent = function (suggestions, tags) {
+    suggestions = suggestions.sort((a, b) => a.localeCompare(b));
+    return {
+        tags: tags,
+        input: '',
+        suggestions: suggestions,
+        filteredSuggestions: [],
+
+        addTag() {
+            let tag = this.input.trim();
+            if (tag && !this.tags.includes(this.input.trim())) {
+                this.tags.push(tag);
+                this.sortTags();
+            }
+            this.input = '';
+            this.filteredSuggestions = [];
+        },
+        removeTag(index) {
+            this.tags.splice(index, 1);
+        },
+        sortTags() {
+            this.tags.sort((a, b) => a.localeCompare(b));
+        },
+        filterSuggestions() {
+            const search = this.input.toLowerCase();
+            this.filteredSuggestions = this.suggestions.filter(s => s.toLowerCase().includes(search) && !this.tags.includes(s));
+        },
+        selectSuggestion(suggestion) {
+            this.input = suggestion;
+            this.addTag();
+        }
+    };
+};
+
